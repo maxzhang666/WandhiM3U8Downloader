@@ -10,7 +10,7 @@ namespace WandhiM3U8Downloader
     public class M3U8Parse
     {
         public string Url = "";
-        public List<string> downloadsUrl = new List<string>();
+        public List<M3U8Entity> downloadsUrl = new List<M3U8Entity>();
         private ILog log = null;
         private bool isM3u = false;
         private bool extinf = false;
@@ -47,6 +47,7 @@ namespace WandhiM3U8Downloader
                 //# EXT-X-MEDIA-SEQUENCE:0
                 //# EXTINF:4.000000,
                 //2cb056dc5bb000000.ts
+                var tempDuration = new M3U8Entity();
                 while ((currentLine = reader.ReadLine()) != null)
                 {
                     if (string.IsNullOrEmpty(currentLine))
@@ -60,15 +61,22 @@ namespace WandhiM3U8Downloader
 
                     else if (currentLine.StartsWith(M3U8Constant.extinf))
                     {
-                        var tempTime = currentLine.Replace(M3U8Constant.extinf + ":", "").Split(',')[0];
+                        var tempInfo = currentLine.Replace(M3U8Constant.extinf + ":", "").Split(',');
                         //记录分片时间
-                        totalTime += double.Parse(tempTime);
+                        tempDuration.Duration = double.Parse(tempInfo[0]);
+                        if (tempInfo.Count() > 1 && !(string.IsNullOrEmpty(tempInfo[1])))
+                        {
+                            tempDuration.Title = tempInfo[1];
+                        }
+                        totalTime += tempDuration.Duration;
                         extinf = true;
                     }
                     else if (extinf)
                     {
                         //拼接分片地址
-                        downloadsUrl.Add(CombineUrl(Url, currentLine));
+                        tempDuration.Url = CombineUrl(Url, currentLine);
+                        downloadsUrl.Add(tempDuration);
+                        tempDuration = new M3U8Entity();
                     }
                     else if (currentLine.StartsWith(M3U8Constant.ext_x_endlist))
                     {

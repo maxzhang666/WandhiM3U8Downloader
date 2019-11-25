@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="ILog.cs" />
     <Compile Include="M3U8Constant.cs" />
+    <Compile Include="M3U8Entity.cs" />
     <Compile Include="M3U8Parse.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -21,8 +21,13 @@ namespace WandhiM3U8Downloader
         {
             var p = new M3U8Parse("https://dadi-yun.com/20190305/1826_4d2ec220/800k/hls/index.m3u8", new CustomLog(txt_Log));
             p.parse();
-            listBox1.DataSource = p.downloadsUrl;
+            grid_DownloadInfo.DataSource = p.downloadsUrl;
             
+        }
+
+        private void Txt_Url_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
